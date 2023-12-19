@@ -67,7 +67,7 @@ Ne garder qu'une seule ligne vide entre deux paragraphes
 
 Vous pouvez ajouter toute amélioration que vous jugerez utile à cette liste de transformations.
 
-Le canevas du script à modifier se trouve sous [scripts/text2md.py](scripts/text2md.py).
+Le canevas du script à modifier se trouve sous [scripts/text2md.py](pdfextract/scripts/text2md.py).
 
 
 ## Transformer le Markdown en XML avec zonage des différentes parties du document
@@ -88,7 +88,7 @@ L'élément racine sera appelé `<decision>`.
 
 Ce zonage se fera avec des expressions régulières du module [Python re](https://docs.python.org/fr/3/library/re.html). Vous pouvez également utiliser des outils complémentaires si vous le jugez utile.
 
-Le canevas du script à modifier se trouve sous [scripts/md2xml.py](scripts/md2xml.py).
+Le canevas du script à modifier se trouve sous [scripts/md2xml.py](pdfextract/scripts/md2xml.py).
 
 
 ## Livrable de ces travaux pratiques
