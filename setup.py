@@ -3,7 +3,7 @@ import os
 from setuptools import setup, find_packages
 
 requires = [
-    'python-poppler',
+    #'python-poppler',
 ]
 
 tests_require = [

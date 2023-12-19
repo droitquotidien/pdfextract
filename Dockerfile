@@ -6,7 +6,6 @@ RUN apt-get install -y libpoppler-cpp-dev
 RUN mkdir /venvs
 RUN python3 -m venv /venvs/pdftools
 RUN /venvs/pdftools/bin/pip install -U pip
-RUN /venvs/pdftools/bin/pip install python-poppler
 RUN mkdir /app
 WORKDIR /app
 COPY . .

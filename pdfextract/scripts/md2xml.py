@@ -1,19 +1,5 @@
 """
 Transforme un document md transformé avec text2md en XML découpé avec le "zonage" de la cour de cassation.
-
-Voir les PDF de Judilibre (https://www.courdecassation.fr/acces-rapide-judilibre).
-
-Les zones sont notamment:
-
-- Entête
-- Exposé du litige
-- Motivation
-- Moyens
-- Dispositif
-
-Le XML généré doit transformer chaque paragraphe markdown en éléments <p>.
-Chaque zone doit être de la forme <div class="NOM-ZONE">...</div>.
-L'élément racine sera appelé <decision>.
 """
 import argparse
 import re

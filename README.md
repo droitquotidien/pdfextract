@@ -2,12 +2,14 @@
 
 Les données test proviennent d'une source unique: [Judilibre](https://www.courdecassation.fr/recherche-judilibre) de la cour de cassation. Ces données se trouvent dans le répertoire [exemples](./exemples).
 
-Il est recommandé d'utiliser ce paquetage Python par l'intermédiaire de Docker, via la [Dockerfile](./Dockerfile) fournie.
+Pour plus de simplicité, il est recommandé d'utiliser le conteneur défini par le [Dockerfile](./Dockerfile), à la fois pour la partie d'extraction du texte qui est réalisée avec [Poppler](https://poppler.freedesktop.org) et également pour la partie Python.
+
+> :warning: **Refaire un "build" du conteneur à chaque modification du code Python**: en effet le code Python est *copié* dans le conteneur lors de sa construction.
 
 Pour les travaux pratiques du cours NLP des Mines Paris, voir les instructions dans le fichier [TP.md](./TP.md).
 
 
-## Création du conteneur
+## Création du conteneur (build)
 
 ```bash
 docker build -t pdftools .
@@ -53,4 +55,22 @@ Commande à lancer dans le répertoire racine du dépôt Git:
 
 ```bash
 docker run -v ./exemples:/data -it pdftools /venvs/pdftools/bin/md2xml /data/pourvoi_n_21-24.923_30_11_2023.md /data/pourvoi_n_21-24.923_30_11_2023.xml
+```
+
+
+## Alternative: installation du paquetage Python dans un environnement virtuel sans Docker
+
+Alternativement, et de manière un peu plus compliquée, il est tout à fait possible d'installer le paquetage Python directement sur votre machine, par exemple dans un environnement virtuel (`CHEMIN_DU_VENV` est un répertoire qui sera créé par la première commande ci-dessous):
+
+```bash
+python3 -m venv CHEMIN_DU_VENV
+CHEMIN_DU_VENV/bin/pip install -e .
+```
+
+De cette manière, vous pouvez utiliser directement les commandes `text2md` et `md2xml`:
+
+```bash
+CHEMIN_DU_VENV/bin/text2md ./exemples/pourvoi_n_21-24.923_30_11_2023.txt ./exemples/pourvoi_n_21-24.923_30_11_2023.md
+
+CHEMIN_DU_VENV/bin/md2xml ./exemples/pourvoi_n_21-24.923_30_11_2023.md ./exemples/pourvoi_n_21-24.923_30_11_2023.xml
 ```
