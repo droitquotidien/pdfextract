@@ -14,6 +14,9 @@ def main():
     with open(args.in_file, "r", encoding="utf-8") as f:
         textdata = f.read()
 
+
+
+
     # Transform textdata with re here
     # see https://docs.python.org/fr/3/library/re.html
     mddata = textdata
