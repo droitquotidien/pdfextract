@@ -14,15 +14,32 @@ def main():
     with open(args.in_file, "r", encoding="utf-8") as f:
         textdata = f.read()
 
-
-
-
     # Transform textdata with re here
     # see https://docs.python.org/fr/3/library/re.html
+    
+    # Build title
+    num_match = re.search(r'Pourvoi n° ([A-Z]\s\d+-\d+\.\d+)', textdata)
+    NUM_POURVOI = num_match.group(1) if num_match else "NUM_POURVOI"
+    date_match = re.search(r'Audience publique du (\d+ \w+ \d{4})', textdata)
+    DATE = date_match.group(1) if date_match else "DATE"
+
+    # Remove page numbers and headers
+    textdata = re.sub(r'\n*\s*Page \d+ / \d+\n.*\n*', ' ', textdata)
+
+    # Reconstruct continuous paragraphs
+    textdata = re.sub(r'\n_', '\n\n_', textdata)
+    textdata = re.sub(r'\n(?!\s*\n)', ' ', textdata)
+
+    # Remove leading spaces at the beginning of each paragraph
+    textdata = re.sub(r'\n\s+', '\n\n', textdata)
+
+    # Replace multiple empty lines with a single empty line
+    textdata = re.sub(r'\n\s*\n', '\n\n', textdata)
+
     mddata = textdata
 
     md = list()
-    md.append("# Pourvoi NUM_POURVOI du DATE")
+    md.append(f"# Pourvoi {NUM_POURVOI} du {DATE}")
     md.append("")  # Ligne vide
     md.append(mddata)
 
