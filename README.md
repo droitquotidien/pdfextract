@@ -61,9 +61,7 @@ docker run -v ./exemples:/data -it pdftools /venvs/pdftools/bin/md2xml /data/pou
 
 ## Dev in Container
 
-You can directly develop in the Docker container with VS Code and the Dev Container extension. Please note that you need to run `/venvs/pdftools/bin/python pdfextract/scripts/md2xml.py` to run the scripts.
-
-https://stackoverflow.com/questions/42250222/where-is-docker-image-location-in-windows-10
+You can directly develop in the Docker container with VS Code and the Dev Container extension. Please note that you need to run `/venvs/pdftools/bin/python pdfextract/scripts/md2xml.py` to run the scripts (see [here](https://stackoverflow.com/questions/42250222/where-is-docker-image-location-in-windows-10) for more).
 
 
 ## Alternative: installation du paquetage Python dans un environnement virtuel sans Docker
@@ -84,3 +82,7 @@ CHEMIN_DU_VENV/bin/md2xml ./exemples/pourvoi_n_21-24.923_30_11_2023.md ./exemple
 ```
 
 Pour comprendre la structure d'un arrêt : [ici](https://www.courdecassation.fr/toutes-les-actualites/comprendre-une-decision-de-la-cour/comprendre-un-arret-de-la-cour-de)
+
+## To run the TP
+
+Please use `docker run -v ./exemples:/data -it /app/run.sh /data`.
