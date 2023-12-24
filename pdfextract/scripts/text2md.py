@@ -17,12 +17,12 @@ def main():
     # Transform textdata with re here
     # see https://docs.python.org/fr/3/library/re.html
     mddata = textdata
-    pattern = re.compile(r"\n\n\n\n.*\bpage\s+(\d+)\s*\/\s*(\d+)\b.*\n.*", re.IGNORECASE)
+    pattern = re.compile(r"[\n].*\bpage\s+(\d+)\s*\/\s*(\d+).*[\n]*.*", re.IGNORECASE)
     mddata = re.sub(pattern, r"", mddata)
-    pattern_date = re.compile(r"Audience publique du (.*)\n", re.IGNORECASE)
+    pattern_date = re.compile(r"DU ([0-9].*)\n")
     # find matching group
     date = re.search(pattern_date, mddata)
-    pattern_pourvoi = re.compile(r"Pourvoi n°(.*)\n", re.IGNORECASE)
+    pattern_pourvoi = re.compile(r"n°\s([A-Z]\s[0-9][0-9]\-.*)\n", re.IGNORECASE)
     pourvoi = re.search(pattern_pourvoi, mddata)
 
     linebreaks = re.compile(r"\n(\n)+", re.IGNORECASE)

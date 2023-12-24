@@ -82,3 +82,5 @@ CHEMIN_DU_VENV/bin/text2md ./exemples/pourvoi_n_21-24.923_30_11_2023.txt ./exemp
 
 CHEMIN_DU_VENV/bin/md2xml ./exemples/pourvoi_n_21-24.923_30_11_2023.md ./exemples/pourvoi_n_21-24.923_30_11_2023.xml
 ```
+
+Pour comprendre la structure d'un arrêt : [ici](https://www.courdecassation.fr/toutes-les-actualites/comprendre-une-decision-de-la-cour/comprendre-un-arret-de-la-cour-de)
