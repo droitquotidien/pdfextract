@@ -37,6 +37,8 @@ Commande à lancer dans le répertoire racine du dépôt Git:
 docker run -v ./exemples:/data -it pdftools /usr/bin/pdftotext -layout /data/pourvoi_n_21-24.923_30_11_2023.pdf
 ```
 
+Sous Windows, il faut remplacer `./exemples` par le chemin absolu du dossier (e. g. `docker run -v  C:\Users\flowp\Documents\Git\pdfextract/exemples:/data -it pdftools /usr/bin/pdftotext -layout /data/pourvoi_n_21-24.923_30_11_2023.pdf`)
+
 Par défaut, le fichier texte sera généré avec le même nom et au même emplacement que le fichier PDF, avec l'extension `.txt`. Le fichier texte généré est en `utf-8`.
 
 
@@ -56,6 +58,12 @@ Commande à lancer dans le répertoire racine du dépôt Git:
 ```bash
 docker run -v ./exemples:/data -it pdftools /venvs/pdftools/bin/md2xml /data/pourvoi_n_21-24.923_30_11_2023.md /data/pourvoi_n_21-24.923_30_11_2023.xml
 ```
+
+## Dev in Container
+
+You can directly develop in the Docker container with VS Code and the Dev Container extension. Please note that you need to run `/venvs/pdftools/bin/python pdfextract/scripts/md2xml.py` to run the scripts.
+
+https://stackoverflow.com/questions/42250222/where-is-docker-image-location-in-windows-10
 
 
 ## Alternative: installation du paquetage Python dans un environnement virtuel sans Docker
