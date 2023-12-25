@@ -16,6 +16,22 @@ def main():
 
     # Transform textdata with re here
     # see https://docs.python.org/fr/3/library/re.html
+
+    # Extracting case number and date
+    NUM_POURVOI = re.search(r'Pourvoi n° ([A-Z]\s\d+-\d+\.\d+)', textdata).group(1) if re.search(r'Pourvoi n° ([A-Z]\s\d+-\d+\.\d+)', textdata) else "NUM_POURVOI"
+    DATE = re.search(r'Audience publique du (\d+ \w+ \d{4})', textdata).group(1) if re.search(r'Audience publique du (\d+ \w+ \d{4})', textdata) else "DATE"
+
+    # Cleaning and formatting the text
+    patterns = [
+        (r'\n*\s*Page \d+ / \d+\n.*\n*', ' '),
+        (r'\n_', '\n\n_'),
+        (r'\n(?!\s*\n)', ' '),
+        (r'\n\s+', '\n\n'),
+        (r'\n\s*\n', '\n\n')
+    ]
+    for pattern, replacement in patterns:
+        textdata = re.sub(pattern, replacement, textdata)
+
     mddata = textdata
 
     md = list()
