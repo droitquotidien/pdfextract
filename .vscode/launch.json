@@ -1,0 +1,36 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "md2xml",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/pdfextract/scripts/md2xml.py",
+            "args": ["${workspaceFolder}/exemples/pourvoi_n_21-24.923_30_11_2023.md", "${workspaceFolder}/exemples/pourvoi_n_21-24.923_30_11_2023.xml"],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "text2md",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/pdfextract/scripts/text2md.py",
+            "args": ["${workspaceFolder}/exemples/pourvoi_n_21-24.923_30_11_2023.txt", "${workspaceFolder}/exemples/pourvoi_n_21-24.923_30_11_2023.md"],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}
