@@ -31,10 +31,16 @@ L'argument `-i` que l'on ajoute ici est pour indiquer que le conteneur doit êtr
 
 ## Extraire un fichier texte d'un fichier PDF
 
-Commande à lancer dans le répertoire racine du dépôt Git:
+Commande à lancer dans le répertoire racine du dépôt Git pour les systèmes d'exploitation basés sur Unix (Linux, macOS, WSL sous Windows) :
 
 ```bash
 docker run -v ./exemples:/data -it pdftools /usr/bin/pdftotext -layout /data/pourvoi_n_21-24.923_30_11_2023.pdf
+```
+
+Pour un environnement dans le powershell Windows utiliser plutôt cette commande (syntaxe différente pour les chemin d'accès) :
+
+```bash
+docker run -v .\exemples:/data -it pdftools /usr/bin/pdftotext -layout /data/pourvoi_n_21-24.923_30_11_2023.pdf
 ```
 
 Par défaut, le fichier texte sera généré avec le même nom et au même emplacement que le fichier PDF, avec l'extension `.txt`. Le fichier texte généré est en `utf-8`.
@@ -42,21 +48,30 @@ Par défaut, le fichier texte sera généré avec le même nom et au même empla
 
 ## Transformer un fichier texte en fichier Markdown
 
-Commande à lancer dans le répertoire racine du dépôt Git:
+Commande à lancer dans le répertoire racine du dépôt Git pour les systèmes d'exploitation basés sur Unix (Linux, macOS, WSL sous Windows) :
 
 ```bash
 docker run -v ./exemples:/data -it pdftools /venvs/pdftools/bin/text2md /data/pourvoi_n_21-24.923_30_11_2023.txt /data/pourvoi_n_21-24.923_30_11_2023.md
 ```
+Pour un environnement dans le powershell Windows utiliser plutôt cette commande (syntaxe différente pour les chemin d'accès) :
 
+```bash
+docker run -v .\exemples:/data -it pdftools /venvs/pdftools/bin/text2md /data/pourvoi_n_21-24.923_30_11_2023.txt /data/pourvoi_n_21-24.923_30_11_2023.md
+```
 
 ## Transformer un fichier Markdown en fichier XML
 
-Commande à lancer dans le répertoire racine du dépôt Git:
+Commande à lancer dans le répertoire racine du dépôt Git pour les systèmes d'exploitation basés sur Unix (Linux, macOS, WSL sous Windows) :
 
 ```bash
 docker run -v ./exemples:/data -it pdftools /venvs/pdftools/bin/md2xml /data/pourvoi_n_21-24.923_30_11_2023.md /data/pourvoi_n_21-24.923_30_11_2023.xml
 ```
 
+Pour un environnement dans le powershell Windows utiliser plutôt cette commande (syntaxe différente pour les chemin d'accès) :
+
+```bash
+docker run -v .\exemples:/data -it pdftools /venvs/pdftools/bin/md2xml /data/pourvoi_n_21-24.923_30_11_2023.md /data/pourvoi_n_21-24.923_30_11_2023.xml
+```
 
 ## Alternative: installation du paquetage Python dans un environnement virtuel sans Docker
 
