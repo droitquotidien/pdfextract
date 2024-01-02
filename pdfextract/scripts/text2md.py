@@ -15,13 +15,14 @@ def main():
         textdata = f.read()
 
     # Use regular expressions to remove unnecessary text
-    patternEndPage = re.compile(r'\s*Page \d+ \/ \d+\s*\n')
+    patternEndPage = re.compile(r'[ ]*Page \d+ \/ \d+\s*\n')
     patternStartPage = re.compile(r'\f\s*Pourvoi N°(.*)\n')
     pourvoiInfo = re.search(r'[nN]° [A-Z] (\d{2}-\d{2}.\d{3})\s?\w?', textdata)
     date = re.search(r'DU (\d+ \w+ \d{4})', textdata)
-    mddata = re.sub(patternEndPage, '', textdata)
+    mddata = re.sub(patternEndPage, r'', textdata)
     mddata = re.sub(patternStartPage, ' ', mddata)
-    mddata = re.sub(r'([,\w])\n[^\n]', r'\1 ', mddata) #join lines that are not a different paragraph
+    mddata = re.sub(r'([,\w])\n([^_\n])', r'\1 \2', mddata) # join lines that are not a different paragraph
+    mddata = re.sub(r'(\n\n)\n*', r'\1', mddata) # max one empty line
 
     md = list()
     md.append(f'# Pourvoi {pourvoiInfo.group(1)} du {date.group(1)}')
