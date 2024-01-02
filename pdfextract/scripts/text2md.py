@@ -1,5 +1,5 @@
 """
-Transforme un document texte issu d'un PDF de la cours de cassation en Markdown.
+Transforme un document texte issu d'un PDF de la cour de cassation en Markdown.
 """
 import argparse
 import re
@@ -19,9 +19,32 @@ def main():
     mddata = textdata
 
     md = list()
-    md.append("# Pourvoi NUM_POURVOI du DATE")
-    md.append("")  # Ligne vide
-    md.append(mddata)
+    NUM_POURVOI = re.search('(?<=Pourvoi N°)([0-9]|-)+.[0-9]+',mddata).group(0)
+    DATE = re.search('(?<=DU )[0-9]+ [a-zA-ZéÉèÈàÀûÛ]+ [0-9]+',mddata).group(0)
+    title = "# Pourvoi " + NUM_POURVOI + " du " + DATE
+    md.append(title)
+    md.append("")
+    linestext = re.split('\n+',mddata)
+    for line in linestext :
+        test = re.search('^[^ \t\n\r\f\v\x0c]',line)
+        try :
+            if test.group(0)!=0:
+                md.append(line)
+        except:
+            pass
+    i = 1
+    round = 0
+    max = len(md)
+    while round <= max:
+        try:
+            if re.search('^([a-z]|([0-9]+ [a-z]))',md[i]).group(0)!=0:
+                md[i-1] = md[i-1] + " " + md[i]
+                md.remove(md[i])
+        except:
+            i += 1
+        round += 1
+    for index, line in enumerate(md):
+        md[index] = line + '\n'
 
     outdata = '\n'.join(md) 
     with open(args.out_file, "w", encoding="utf-8") as f:
