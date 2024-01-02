@@ -17,8 +17,8 @@ En suivant les différentes étapes, vous devez maintenant être en mesure d'ext
 
 L'ojectif est d'obtenir un document texte "normalisé" en Markdown à partir du fichier texte issu d'un PDF de la cours de cassation.
 
-Cette normalisation se fera avec des expressions régulières du module [Python re](https://docs.python.org/fr/3/library/re.html). 
- 
+Cette normalisation se fera avec des expressions régulières du module [Python re](https://docs.python.org/fr/3/library/re.html).
+
 Cet outil doit notamment ajouter un titre au document Markdown de la forme `Pourvoi NUM du DATE`.
 
 Supprimer les sauts de page, entêtes et autres. Exemple:
@@ -82,7 +82,7 @@ Les zones sont notamment:
 - Moyens
 - Dispositif
 
-Le XML généré doit transformer chaque paragraphe markdown en éléments `<p>``.
+Le XML généré doit transformer chaque paragraphe markdown en éléments `<p>`.
 Chaque zone doit être de la forme `<div class="NOM-ZONE">...</div>`.
 L'élément racine sera appelé `<decision>`.
 
@@ -99,6 +99,3 @@ Trois possibilités:
 - création d'une [merge request](https://docs.gitlab.com/ee/user/project/merge_requests/) Gitlab de ce dépôt après avoir fait un "fork" dans votre propre espace Gitlab
 - en dernier recours, la création d'un patch (fichier texte) obtenu en lançant la commande: `git diff > nom_de_votre_patch.txt`
 à envoyer par email à votre enseignant.
-
-
-
