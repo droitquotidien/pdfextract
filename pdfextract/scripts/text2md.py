@@ -14,7 +14,6 @@ def main():
     with open(args.in_file, "r", encoding="utf-8") as f:
         textdata = f.read()
 
-    
     # TITRE DU MARKDOWN
 
     """
@@ -69,3 +68,6 @@ def main():
     outdata = '\n'.join(md) 
     with open(args.out_file, "w", encoding="utf-8") as f:
         f.write(outdata)
+
+if __name__ == "__main__":
+    main()

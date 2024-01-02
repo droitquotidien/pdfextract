@@ -44,29 +44,34 @@ def main():
     # Expressions régulières pour identifier les différentes sections
     # 1. entête: toute la partie avant "DECISION DE LA COUR" ou "ARRÊT DE LA COUR"    
     entete_pattern = re.compile(r"^(.+?)(?=décision de la cour|arrêt de la cour)", re.DOTALL | re.IGNORECASE)
-    entete = markdown_to_xml_paragraphs(entete_pattern.group(0)) if entete_pattern else ""
+    entete_match = entete_pattern.search(mddata) if entete_pattern else None
+    entete = markdown_to_xml_paragraphs(entete_match.group(0)) if entete_match else ""
 
     corps = ""
     if "deuxième chambre civile" in mddata.lower():
         # on extrait tout le corps dans le cas d'une décision de la deuxième chambre civile
         corps_pattern = re.compile(r"décision de la cour(.*?)en conséquence", re.DOTALL | re.IGNORECASE)
-        corps = markdown_to_xml_paragraphs(corps_pattern.search(mddata).group(0)) if corps_pattern else ""
+        corps_match = corps_pattern.search(mddata) if corps_pattern else None
+        corps = markdown_to_xml_paragraphs(corps_match.group(0)) if corps_match else ""
 
     else:
         # 2. fait juridique: extraction du paragraphe associé
-        fait_juridique_pattern = re.compile(r"(faits et procédures.+?examen des moyens)", re.DOTALL | re.IGNORECASE)
-        fait_juridique = markdown_to_xml_paragraphs(fait_juridique_pattern.search(mddata).group(0)) if fait_juridique_pattern else ""
+        fait_juridique_pattern = re.compile(r"(faits et procédure.+?examen (?:du moyen|des moyens))", re.DOTALL | re.IGNORECASE)
+        fait_juridique_match = fait_juridique_pattern.search(mddata) if fait_juridique_pattern else None
+        fait_juridique = markdown_to_xml_paragraphs(fait_juridique_match.group(0)) if fait_juridique_match else ""
 
-        # 3. examnens des moyens: extraction du paragraphe associé
-        examen_moyens_pattern = re.compile(r"(examens des moyens.+?énoncé des moyens)", re.DOTALL | re.IGNORECASE)
-        examen_moyens = markdown_to_xml_paragraphs(examen_moyens_pattern.search(mddata).group(0)) if examen_moyens_pattern else ""
+        # 3. examnens des moyens: extraction du paragraphe associé 
+        examen_moyens_pattern = re.compile(r"(examen (?:du moyen|des moyens).+?énoncé (?:du moyen|des moyens))", re.DOTALL | re.IGNORECASE)
+        examen_moyens_match = examen_moyens_pattern.search(mddata) if examen_moyens_pattern else None
+        examen_moyens = markdown_to_xml_paragraphs(examen_moyens_match.group(0)) if examen_moyens_match else ""
 
         # 4. Extraction et création de paragraphe pour autant d'énoncé et de réponse de la cour possible
         moyen_et_reponse = extract_moyen_et_reponse(mddata)
     
     # 5. décisions: toute la partie après "en conséquence" (chambre criminelle) ou "par ces motifs" (chambre civile)
     dispositif_pattern = re.compile(r"(en conséquence|par ces motifs).*", re.DOTALL | re.IGNORECASE)
-    dispositif = markdown_to_xml_paragraphs(dispositif_pattern.search(mddata).group(0)) if dispositif_pattern else ""
+    dispositif_match = dispositif_pattern.search(mddata) if dispositif_pattern else None
+    dispositif = markdown_to_xml_paragraphs(dispositif_match.group(0)) if dispositif_match else ""
 
     if "deuxième chambre civile" in mddata.lower():
         xml = list()
@@ -92,3 +97,6 @@ def main():
 
     with open(args.out_file, "w", encoding="utf-8") as f:
         f.write(outdata) 
+
+if __name__ == '__main__':
+    main()
