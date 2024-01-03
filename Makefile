@@ -1,5 +1,10 @@
 .PHONY: text2md
 
+build-all: build-docker
+	make pdf2text-all
+	make text2md-all
+	make md2xml-all
+
 pdf2text-all:
 	@for file in exemples/*.pdf; do \
 		make pdf2text file=$${file#exemples/}; \
@@ -12,6 +17,9 @@ build-text2md: build-docker
 	make text2md file=$(file)
 
 build-text2md-all: build-docker
+	make text2md-all
+
+text2md-all:
 	@for file in exemples/*.txt; do \
 		make text2md file=$${file#exemples/}; \
 	done
@@ -23,6 +31,9 @@ build-md2xml: build-docker
 	make md2xml file=$(file)
 
 build-md2xml-all: build-docker
+	make md2xml-all
+
+md2xml-all:
 	@for file in exemples/*.md; do \
 		make md2xml file=$${file#exemples/}; \
 	done
@@ -32,3 +43,8 @@ md2xml:
 
 build-docker:
 	docker build -t pdftools .
+
+clear-all:
+	rm -rf exemples/*.txt
+	rm -rf exemples/*.md
+	rm -rf exemples/*.xml
