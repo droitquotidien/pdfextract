@@ -40,9 +40,11 @@ rapporteur, Mme Chauve, conseiller, et Mme Cathala, greffier de chambre,
 
 la deuxième chambre civile de la Cour de cassation, composée des président et conseillers précités, après en avoir
 délibéré conformément à la loi, a rendu la présente décision.
+```
 
 reconstruire des paragraphes continus, sans saut de ligne au milieu d'un paragraphe. Exemple:
 
+```
 rapporteur, Mme Chauve, conseiller, et Mme Cathala, greffier de chambre,
 
 la deuxième chambre civile de la Cour de cassation, composée des président et conseillers précités, après en avoir
