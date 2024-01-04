@@ -14,12 +14,25 @@ def main():
     with open(args.in_file, "r", encoding="utf-8") as f:
         textdata = f.read()
 
-    # Transform textdata with re here
-    # see https://docs.python.org/fr/3/library/re.html
-    mddata = textdata
+    header = r'Pourvoi N°(\d{2}-\d{2,3}\.\d{3})-\D+(\d{1,2}\D+\d{4})\n'
+
+    text_without_headers = re.sub(header, ' ', textdata)
+    text_without_footers = re.sub(r'\s*Page \d+ / \d+\s*', '', text_without_headers)
+    text_without_page_breaks = re.sub('\f', '', text_without_footers)
+    text_reassembled = re.sub(', \n\n', ', ', text_without_page_breaks) # Reassemble the paragraphs
+    text_without_underscores = re.sub(r'_{2,}', '', text_reassembled)
+    text_with_max_one_blank_line = re.sub(r'\n{3,}', r'\n\n', text_without_underscores)
+    text_one_line_per_paragraph = re.sub(r'([^\n])\n([^\n])', r'\1 \2', text_with_max_one_blank_line)
+    
+    mddata = text_one_line_per_paragraph
+
+    # Let's find the number and the date
+    match = re.search(header, textdata)
+    number = match.group(1)
+    date = match.group(2)
 
     md = list()
-    md.append("# Pourvoi NUM_POURVOI du DATE")
+    md.append(f"# Pourvoi {number} du {date}")
     md.append("")  # Ligne vide
     md.append(mddata)
 
