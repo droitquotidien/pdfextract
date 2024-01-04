@@ -15,13 +15,24 @@ def main():
 
     # Transform textdata with re here
     # see https://docs.python.org/fr/3/library/re.html
-    search = re.search(".*", textdata)
-    mddata = search.group(0)
-    
-    pourvoi_search = re.search("Pourvoi n° (.*)", textdata)
+    mddata = re.sub(r'_+', '', textdata) # remove multiple underscores
+    mddata = re.sub(r'\n{3,}', '\n\n', mddata) # allow at most one consecutive "new line" character
+    mddata = re.sub(r'\x0c', '', mddata) # remove multiple spaces
+    mddata = re.sub(r' +', ' ', mddata) # remove multiple spaces
+    mddata = re.sub(r'Page [1-9]?[0-9] / [1-9]?[0-9]\n+', '', mddata) # remove footers
+    mddata = re.sub(r'Pourvoi.*20[0-9][0-9]', '', mddata) # remove headers
+    mddata = re.sub(r'([a-z]|[0-9]|[,;]+)\n+ *\n*([a-z]|[0-9]+)', lambda x: x.group(1) + ' ' + x.group(2), mddata) # re build paragraphs
+
+
+# Pourvoi N°21-24.923-Deuxième chambre civile 30 novembre 202
+    # lower capital or number or punctuation symbol
+    # lower capital -> lower \n capital
+    # lower \n lower -> lower lower
+        
+    pourvoi_search = re.search("Pourvoi n° (.*)", mddata)
     NUM_POURVOI = pourvoi_search.group(1)
 
-    date_search = re.search("[1-9]?[0-9] .* 20[0-9][0-9]", textdata)
+    date_search = re.search("[1-9]?[0-9] .* 20[0-9][0-9]", mddata)
     DATE = date_search.group(0)
 
     md = list()
