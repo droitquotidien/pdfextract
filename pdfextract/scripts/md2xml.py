@@ -30,7 +30,7 @@ def find_exposelitige(txt):
 def find_dispositif(txt):
     txt = re.sub(
         r"<p>((PAR CES MOTIFS|EN CONSÉQUENCE),(.*,)?) la Cour :</p>",
-        r'<div class="Dispositif">\n<p>\1, la Cour :</p>',
+        r'<div class="Dispositif">\n<p>\1 la Cour :</p>',
         txt,
     )
     return txt + "\n</div>"
@@ -75,16 +75,16 @@ def find_moyensmotivation(txt, filename=""):
     pattern_debut_moyens_2 = (
         r"<p>([^ \n]* )*(s|S)ur les? [^\n]*moyens?(, ([^\n]*))?<\/p>"
     )
-    pattern_debut_moyens_3 = r"<p>(Enoncé du moyen|Enoncé des moyens)</p>"
+    pattern_debut_moyens_3 = r"<p>Enoncé (du moyen|des moyens)</p>"
     pattern_debut_moyens = rf"({pattern_debut_moyens_1}\n{pattern_debut_moyens_2})|({pattern_debut_moyens_1}\n{pattern_debut_moyens_3})|({pattern_debut_moyens_2}\n{pattern_debut_moyens_3})"
 
     # s'il n'y a pas de début "moyens"
     if re.search(pattern_debut_moyens, txt) is None:
         return (
             txt[: div_index[-2].end()]
-            + '\n<div class="Motivation">'
+            + '\n\n<div class="Motivation">'
             + txt[div_index[-2].end() + 1 : div_index[-1].start()]
-            + "</div>\n"
+            + "</div>\n\n"
             + txt[div_index[-1].start() :]
         )
 
@@ -93,18 +93,20 @@ def find_moyensmotivation(txt, filename=""):
 
     # grâce au re.search précédent
     assert len(all_moyens) > 0
-    # on conjecture cela sur 5 exemples... toute la logique ci-dessous suppose implicitement cela
+    # on conjecture l'assertion suivante sur les 5 exemples... toute la logique ci-dessous suppose implicitement cela
     assert len(all_moyens) >= len(all_motivations)
-
-    i_moyen = 0
-    i_motivation = 0
 
     # Il faut baliser de div le texte entre begin_index et stop_index
     begin_index = all_moyens[0].start()
     stop_index = div_index[-1].start()
 
     newtxt = txt[:begin_index]
+    i_moyen = 0
+    i_motivation = 0
     while i_moyen < len(all_moyens) - 1:
+        # Invariants de boucle:
+        # - newtxt contient tout le texte de txt[:begin_index] correctement balisé
+        # - le texte txt[begin_index:] commence par un texte qui doit être balisé "moyens"
         newtxt += '\n<div class="Moyens">\n'
         if (
             i_motivation < len(all_motivations)
@@ -132,13 +134,13 @@ def find_moyensmotivation(txt, filename=""):
     ):
         assert i_motivation == len(all_motivations) - 1
         newtxt += txt[begin_index : all_motivations[-1].start()]
-        newtxt += '</div>\n<div class="Motivation">\n'
+        newtxt += '</div>\n\n<div class="Motivation">\n'
         newtxt += txt[all_motivations[-1].start() : stop_index]
 
     else:
         assert i_motivation == len(all_motivations)
         newtxt += txt[begin_index : all_moyens[-1].end()]
-        newtxt += '\n</div>\n<div class="Motivation">\n'
+        newtxt += '\n</div>\n\n<div class="Motivation">\n'
         newtxt += txt[all_moyens[-1].end() : stop_index]
 
     return newtxt + "</div>\n\n" + txt[stop_index:]
@@ -162,6 +164,7 @@ def main(in_file=None, out_file=None):
 
     # Transforme les \n\n en paragraphes
     mddata = re.sub(r"\n\n(.+)\n\n", r"</p>\n<p>\1</p>\n<p>", mddata)
+    mddata = re.sub(r"\n\n", r"</p>\n<p>", mddata)
     mddata = "<p>" + mddata + "</p>"
 
     # En-tête
