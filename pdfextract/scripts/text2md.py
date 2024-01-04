@@ -22,12 +22,6 @@ def main():
     mddata = re.sub(r'Page [1-9]?[0-9] / [1-9]?[0-9]\n+', '', mddata) # remove footers
     mddata = re.sub(r'Pourvoi.*20[0-9][0-9]', '', mddata) # remove headers
     mddata = re.sub(r'([a-z]|[0-9]|[,;]+)\n+ *\n*([a-z]|[0-9]+)', lambda x: x.group(1) + ' ' + x.group(2), mddata) # re build paragraphs
-
-
-# Pourvoi N°21-24.923-Deuxième chambre civile 30 novembre 202
-    # lower capital or number or punctuation symbol
-    # lower capital -> lower \n capital
-    # lower \n lower -> lower lower
         
     pourvoi_search = re.search("Pourvoi n° (.*)", mddata)
     NUM_POURVOI = pourvoi_search.group(1)
