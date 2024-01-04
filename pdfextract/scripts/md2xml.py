@@ -5,7 +5,7 @@ import argparse
 import re
 
 
-def find_entete(txt):
+def find_and_tag_entete(txt):
     # Commence au début du document, termine toujours par la même phrase
     txt = re.sub(
         r"(la( | ([^ ]+) )chambre [^ ]* de la Cour de cassation, composée .+, après en avoir délibéré conformément à la loi, a rendu .+.</p>)",
@@ -15,19 +15,17 @@ def find_entete(txt):
     return '<div class="En-tête">\n' + txt
 
 
-def find_exposelitige(txt):
+def find_and_tag_exposelitige(txt):
     # Commence avant "Faits et procédure" et termine avant "Examen du(des) moyen(s)"
     txt = re.sub(
         "<p>Faits et procédure</p>",
         '<div class="Exposé du litige">\n<p>Faits et procédure</p>',
         txt,
     )
-    return re.sub(
-        r"<p>Examen (du moyen|des moyens)</p>", r"</div>\n<p>Examen \1</p>", txt
-    )
+    return re.sub(r"<p>Examen d(u|es) moyens?</p>", r"</div>\n<p>Examen \1</p>", txt)
 
 
-def find_dispositif(txt):
+def find_and_tag_dispositif(txt):
     txt = re.sub(
         r"<p>((PAR CES MOTIFS|EN CONSÉQUENCE),(.*,)?) la Cour :</p>",
         r'<div class="Dispositif">\n<p>\1 la Cour :</p>',
@@ -36,12 +34,13 @@ def find_dispositif(txt):
     return txt + "\n</div>"
 
 
-def find_moyensmotivation(txt, filename=""):
+def find_and_tag_moyensmotivation(txt, filename=""):
     """
     C'est de très loin la partie difficile de ce TD. Sur les 5 exemples proposés, il semble n'y avoir aucun moyen de faire une règle générale simple....
-    Mon problème principal est que je ne trouve pas de règle générale pour détecter la séparation "moyen"/"motivation".
+    Le point le plus délicat étant de détecter la séparation "moyen"/"motivation".
 
-    Pour éviter de passer trop de temps à devoir comprendre la structure des arrêts de la cour de cassation (réputés pour être extrêmement difficiles à lire pour un non-initié),
+    Pour éviter de passer trop de temps à devoir comprendre la structure des arrêts de la cour de cassation,
+    (réputés pour être extrêmement difficiles à lire pour un non-initié),
     je vais suivre les règles suivantes :
 
     Si la phrase "Examen du/des moyen(s)" est absente, on appelle "motivation" le texte pas encore encadré dans une div
@@ -61,7 +60,11 @@ def find_moyensmotivation(txt, filename=""):
             Les deux exceptions sont:
                 - pourvoi n° 21-24.923: parce qu'aucun bloc "moyen" n'a été trouvé
                 - pourvoi n° 22-81.985: difficile d'énoncer une règle...
-                on va donc dire (mais c'est totalement arbitraire) que le bloc commence à la fin du pattern ayant permi de détecter le début du dernier bloc "moyen"
+                on va donc dire (mais c'est totalement arbitraire) que le bloc commence à la fin du pattern ayant permi de détecter le début du dernier bloc "moyen".
+                C'est un peu compliqué à coder, mais:
+                    - c'est simple à énoncer,
+                    - ça semble généralisable,
+                    - ça permet d'expliquer la structure des 5 exemples donnés par courdecassation.fr
 
         - Fin des blocs "motivations":
             Soit le début d'un bloc "moyen", soit le début du bloc "dispositif".
@@ -71,11 +74,11 @@ def find_moyensmotivation(txt, filename=""):
     div_index = list(re.finditer(pattern_balise, txt))
 
     # reconnait le texte caractéristique du début des balises "moyens"
-    pattern_debut_moyens_1 = r"<p>Examen (des moyens|du moyen)</p>"
+    pattern_debut_moyens_1 = r"<p>Examen d(u|es) moyens?</p>"
     pattern_debut_moyens_2 = (
         r"<p>([^ \n]* )*(s|S)ur les? [^\n]*moyens?(, ([^\n]*))?<\/p>"
     )
-    pattern_debut_moyens_3 = r"<p>Enoncé (du moyen|des moyens)</p>"
+    pattern_debut_moyens_3 = r"<p>Enoncé d(u|es) moyens?</p>"
     pattern_debut_moyens = rf"({pattern_debut_moyens_1}\n{pattern_debut_moyens_2})|({pattern_debut_moyens_1}\n{pattern_debut_moyens_3})|({pattern_debut_moyens_2}\n{pattern_debut_moyens_3})"
 
     # s'il n'y a pas de début "moyens"
@@ -162,22 +165,25 @@ def main(in_file=None, out_file=None):
     # see https://docs.python.org/fr/3/library/re.html
     # document must be a valid XML file
 
+    # Retire la première ligne (#Pourvoi NN du jj/mm/aaaa)
+    mddata = re.sub(r"# Pourvoi .* du .*\n+", "", mddata)
+
     # Transforme les \n\n en paragraphes
     mddata = re.sub(r"\n\n(.+)\n\n", r"</p>\n<p>\1</p>\n<p>", mddata)
     mddata = re.sub(r"\n\n", r"</p>\n<p>", mddata)
     mddata = "<p>" + mddata + "</p>"
 
     # En-tête
-    mddata = find_entete(mddata)
+    mddata = find_and_tag_entete(mddata)
 
     # Exposé du litige
-    mddata = find_exposelitige(mddata)
+    mddata = find_and_tag_exposelitige(mddata)
 
-    # Dispositif (dernière section, mais plus simple de la traiter en premier)
-    mddata = find_dispositif(mddata)
+    # Dispositif (dernière section, mais doit être traitée avant "find_moyensmotivation")
+    mddata = find_and_tag_dispositif(mddata)
 
     # Couple Moyens - motivation
-    mddata = find_moyensmotivation(mddata, in_file)
+    mddata = find_and_tag_moyensmotivation(mddata, in_file)
 
     xmldata = mddata
 

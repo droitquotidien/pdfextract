@@ -1,5 +1,5 @@
 """
-Transforme un document texte issu d'un PDF de la cours de cassation en Markdown.
+Transforme un document texte issu d'un PDF de la cour de cassation en Markdown.
 """
 import argparse
 import re
