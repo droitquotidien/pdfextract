@@ -26,17 +26,23 @@ def main(in_file=None, out_file=None):
     textdata = re.sub("RÉPUBLIQUEFRANÇAISE", "", textdata)
     textdata = re.sub("AU NOM DU PEUPLE FRANÇAIS", "", textdata)
 
-    # 2. Supprimer les pieds de page et reconstitue le paragraphe
-    textdata = re.sub(r"\n+.*Page \d+ / \d+\n.*", "", textdata)
+    # 2. Supprimer les pieds de page et les espaces associés (laisse une seule ligne vide entre les deux)
+    textdata = re.sub(r"\n+.*Page \d+ / \d+\n.*", "\n", textdata)
 
-    # 3. Supprime les \n qui ne sont pas précédés ou suivis par un \n
-    textdata = re.sub(r"(?<!\n)\n(?!\n)", " ", textdata)
-
-    # 4. Remplace les suites de \n par \n\n (une seule ligne vide entre deux paragraphes)
+    # 3. Remplace toutes les suites de lignes vides par une seule ligne vide
     textdata = re.sub(r"\n{2,}", "\n\n", textdata)
 
-    mddata = textdata
+    # 3. Garder les lignes vides \n\n uniquement si :
+    # - la ligne d'avant se termine par un des trois caractères ; . :
+    # - OU la ligne d'après commence par une majuscule ou un chiffre
+    # Remarque: cette méthode supprime l'espace \n\n dans les phrases du type ", greffier de chambre,\n\nla".
+    # Ceci est conforme aux instructions sur TP.md, mais sur les documents .pdf (et sur courdecassation.fr), ces espaces ont l'air d'avoir été mis là exprès.
+    textdata = re.sub(r"(?<!(;|\.|:))\n\n(?!([A-Z]|\d))", " ", textdata)
 
+    # 4. Supprimer les retours chariots dans les paragraphes
+    textdata = re.sub(r"(?<!\n)\n(?!\n)", " ", textdata)
+
+    mddata = textdata
     md = list()
     numero, jj, mm, aaaa = in_file[:-3].split("_")[2:]
     md.append(f"# Pourvoi {numero} du {jj}/{mm}/{aaaa}")
