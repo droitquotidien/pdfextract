@@ -20,7 +20,6 @@ Réponse de la Cour 7. Pour confirmer, sur le fondement du premier alinéa de l'
 PAR CES MOTIFS, la Cour :
 REJETTE le pourvoi ;
 
-Pourvoi N°23-81.811-Chambre criminelle 13 décembre 2023
 Ainsi fait et jugé par la Cour de cassation, chambre criminelle, et prononcé par le président en son audience publique du treize décembre deux mille vingt-trois.
 
 Pourvoi N°23-81.811-Chambre criminelle 13 décembre 2023

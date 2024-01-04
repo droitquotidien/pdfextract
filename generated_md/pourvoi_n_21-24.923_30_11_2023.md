@@ -21,4 +21,3 @@ Laisse les dépens à la charge du Trésor public ;
 En application de l'article 700 du code de procédure civile, rejette les demandes ;
 Ainsi décidé par la Cour de cassation, deuxième chambre civile, et prononcé par le président en son audience publique du trente novembre deux mille vingt-trois.
 
-Pourvoi N°21-24.923-Deuxième chambre civile 30 novembre 2023

@@ -22,13 +22,23 @@ def markdown_to_xml_paragraphs(text):
     return '\n'.join(f'<p>{p.strip()}</p>' for p in paragraphs if p.strip())
 
 def extract_moyen_et_reponse(mddata):
-    """Extrait et numérote les parties entre 'énoncé du moyen' et 'réponse de la cour'."""
-    moyen_et_reponse_pattern = re.compile(r"énoncé du moyen(.*?)réponse de la cour", re.DOTALL | re.IGNORECASE)
-    matches = moyen_et_reponse_pattern.findall(mddata)
+    """Extrait et numérote les moyens et les réponses de la cour associées."""
     moyen_et_reponse_xml = []
 
-    for i, match in enumerate(matches, start=1):
-        moyen_et_reponse_xml.append(f'<moyen{i}>{markdown_to_xml_paragraphs(match)}</moyen{i}>')
+    # Trouver tous les "énoncé du moyen"
+    moyens_matches = re.finditer(r"enoncé du moyen(.*?)(réponse de la cour)", mddata, re.DOTALL | re.IGNORECASE)
+
+    for i, moyen_match in enumerate(moyens_matches, start=1):
+        # Extraire le texte du moyen
+        moyen_text = moyen_match.group(1)
+        moyen_et_reponse_xml.append(f'<moyen{i}>{markdown_to_xml_paragraphs(moyen_text)}</moyen{i}>')
+
+        # Trouver la "réponse de la cour" suivant immédiatement ce moyen
+        end_pos = moyen_match.end(1)  # Fin du texte du moyen
+        reponse_match = re.search(r"réponse de la cour(.*?)(?=enoncé du moyen|PAR CES MOTIFS)", mddata[end_pos:], re.DOTALL | re.IGNORECASE)
+        if reponse_match:
+            reponse_text = reponse_match.group(1)
+            moyen_et_reponse_xml.append(f'<reponse{i}>{markdown_to_xml_paragraphs(reponse_text)}</reponse{i}>')
 
     return '\n'.join(moyen_et_reponse_xml)
 
@@ -56,12 +66,12 @@ def main():
 
     else:
         # 2. fait juridique: extraction du paragraphe associé
-        fait_juridique_pattern = re.compile(r"(faits et procédure.+?examen (?:du moyen|des moyens))", re.DOTALL | re.IGNORECASE)
+        fait_juridique_pattern = re.compile(r"(faits et procédure.+?)(?=examen (?:du moyen|des moyens))", re.DOTALL | re.IGNORECASE)
         fait_juridique_match = fait_juridique_pattern.search(mddata) if fait_juridique_pattern else None
         fait_juridique = markdown_to_xml_paragraphs(fait_juridique_match.group(0)) if fait_juridique_match else ""
 
         # 3. examnens des moyens: extraction du paragraphe associé 
-        examen_moyens_pattern = re.compile(r"(examen (?:du moyen|des moyens).+?énoncé (?:du moyen|des moyens))", re.DOTALL | re.IGNORECASE)
+        examen_moyens_pattern = re.compile(r"(examen (?:du moyen|des moyens).+?)(?=enoncé (?:du moyen|des moyens))", re.DOTALL | re.IGNORECASE)
         examen_moyens_match = examen_moyens_pattern.search(mddata) if examen_moyens_pattern else None
         examen_moyens = markdown_to_xml_paragraphs(examen_moyens_match.group(0)) if examen_moyens_match else ""
 
@@ -69,7 +79,7 @@ def main():
         moyen_et_reponse = extract_moyen_et_reponse(mddata)
     
     # 5. décisions: toute la partie après "en conséquence" (chambre criminelle) ou "par ces motifs" (chambre civile)
-    dispositif_pattern = re.compile(r"(en conséquence|par ces motifs).*", re.DOTALL | re.IGNORECASE)
+    dispositif_pattern = re.compile(r"(EN CONSÉQUENCE|PAR CES MOTIFS).*", re.DOTALL)
     dispositif_match = dispositif_pattern.search(mddata) if dispositif_pattern else None
     dispositif = markdown_to_xml_paragraphs(dispositif_match.group(0)) if dispositif_match else ""
 
@@ -88,7 +98,8 @@ def main():
         xml.append('<entete>' + entete + '</entete>')
         xml.append('<exposeLitige>' + fait_juridique + '</exposeLitige>')
         xml.append('<motivation>' + examen_moyens + '</motivation>')
-        xml.append(moyen_et_reponse)  # Inclure les sections "moyen et réponse"
+        if moyen_et_reponse:  # Vérifier si 'moyen_et_reponse' contient des données
+            xml.append('<moyensEtReponses>' + moyen_et_reponse + '</moyensEtReponses>')
         xml.append('<dispositif>' + dispositif + '</dispositif>')
         xml.append('</decision>')
 

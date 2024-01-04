@@ -4,6 +4,15 @@ Transforme un document texte issu d'un PDF de la cours de cassation en Markdown.
 import argparse
 import re
 
+def remove_subsequent_occurrences(text):
+    pattern = r'Pourvoi .*?\d{4}'
+    all_occurrences = re.findall(pattern, text, re.DOTALL)
+    
+    # Supprimer toutes les occurences sauf la première
+    for occurrence in all_occurrences[1:]:
+        text = re.sub(occurrence, '', text, count=1, flags=re.DOTALL)
+    
+    return text
 
 def main():
     parser = argparse.ArgumentParser("text2md")
@@ -37,12 +46,11 @@ def main():
 
     # NETTOYAGE DU DOCUMENT
 
-    # Supprimer les entête répétant les informations commençant par "Pourvoi" et finissant par une année
-    #pattern = r'Pourvoi.*?' + re.escape(date)
-    #textdata = re.sub(pattern, '', textdata, flags=re.DOTALL)
-
     # Supprimer les sauts de page
     textdata = textdata.replace('\f', '')  
+
+    # Supprimer les entête répétant les informations commençant par "Pourvoi" et finissant par une année
+    textdata = remove_subsequent_occurrences(textdata) 
 
     # Compilation des différents motifs de nettoyage en une seule étape
     patterns = [
@@ -55,8 +63,7 @@ def main():
 
     # Application des motifs de nettoyage
     for pattern, replacement in patterns:
-        textdata = re.sub(pattern, replacement, textdata)  
-
+        textdata = re.sub(pattern, replacement, textdata) 
 
     mddata = textdata
 
