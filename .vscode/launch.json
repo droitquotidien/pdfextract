@@ -17,7 +17,7 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/pdfextract/scripts/md2xml.py",
-            "args": ["${workspaceFolder}/exemples/pourvoi_n_21-24.923_30_11_2023.md", "${workspaceFolder}/exemples/pourvoi_n_21-24.923_30_11_2023.xml"],
+            "args": ["${workspaceFolder}/exemples/pourvoi_n_22-81.985_13_12_2023.md", "${workspaceFolder}/exemples/pourvoi_n_22-81.985_13_12_2023.xml"],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "justMyCode": true
@@ -27,7 +27,7 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/pdfextract/scripts/text2md.py",
-            "args": ["${workspaceFolder}/exemples/pourvoi_n_21-24.923_30_11_2023.txt", "${workspaceFolder}/exemples/pourvoi_n_21-24.923_30_11_2023.md"],
+            "args": ["${workspaceFolder}/exemples/pourvoi_n_22-81.985_13_12_2023.txt", "${workspaceFolder}/exemples/pourvoi_n_22-81.985_13_12_2023.md"],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "justMyCode": true

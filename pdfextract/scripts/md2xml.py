@@ -20,33 +20,27 @@ def main():
     # document must be a valid XML file
 
     # Define regular expressions for each part
-    header_pattern = re.compile(r'(CIV\. \d+)|(COUR DE CASSATION)|(Audience publique du \d+)|(Rejet non spécialement motivé)')
-    expose_pattern = re.compile(r'DÉCISION DE LA COUR DE CASSATION, DEUXIÈME CHAMBRE CIVILE, DU \d+')
-    motivations_pattern = re.compile(r'1\. Le moyen de cassation,.*?2\. En application de l\'article \d+, alinéa \d+, du code de procédure civile,')
-    moyens_pattern = re.compile(r'EN CONSÉQUENCE, la Cour :')
-    dispositif_pattern = re.compile(r'REJETTE le pourvoi ;.*?Ainsi décidé par la Cour de cassation, deuxième chambre civile, et prononcé par le président en son audience publique du \w+ \d+')
-
-    # Find matches in the text
-    header_match = header_pattern.search(mddata)
-    expose_match = expose_pattern.search(mddata)
-    motivations_match = motivations_pattern.search(mddata)
-    moyens_match = moyens_pattern.search(mddata)
-    dispositif_match = dispositif_pattern.search(mddata)
+    header_match = re.search(r'^.*?\n+(.*)Faits et procédure', mddata, re.DOTALL)
+    expose_search = re.search(r'(Faits et procédure.*)Examen (du|des) moyens?', mddata, re.DOTALL)
+    moyens_search = re.search(r'(Examen (du|des) moyens?.*)Réponse de la Cour', mddata, re.DOTALL)
+    motivation_search = re.search(r'(Réponse de la Cour.*)PAR CES MOTIFS', mddata, re.DOTALL)
+    dispositif_search = re.search(r'(PAR CES MOTIFS.*)', mddata, re.DOTALL)
 
     # Create XML structure
     root = ET.Element("Pourvoi")
 
-    ET.SubElement(root, "Entete").text = header_match.group() if header_match else ""
-    ET.SubElement(root, "Expose_du_litige").text = expose_match.group() if expose_match else ""
-    ET.SubElement(root, "Motivations").text = motivations_match.group() if motivations_match else ""
-    ET.SubElement(root, "Moyens").text = moyens_match.group() if moyens_match else ""
-    ET.SubElement(root, "Dispositif").text = dispositif_match.group() if dispositif_match else ""
+    ET.SubElement(root, "Entete").text = header_match.group(1) if header_match.group() else ""
+    ET.SubElement(root, "Expose_du_litige").text = expose_search.group(1) if expose_search.groups() else ""
+    ET.SubElement(root, "Moyens").text = moyens_search.group(1) if moyens_search.groups() else ""
+    ET.SubElement(root, "Motivation").text = motivation_search.group(1) if motivation_search.groups() else ""
+    ET.SubElement(root, "Dispositif").text = dispositif_search.group(1) if dispositif_search.groups() else ""
 
     # Create XML file
     tree = ET.ElementTree(root)
     ET.indent(tree, space="\t", level=0)
 
-    tree.write(args.out_file, encoding="utf-8", xml_declaration=True)
+    with open(args.out_file, 'wb') as file:
+        tree.write(file, encoding="utf-8", xml_declaration=True)
 
 
-main()
+# main()  # for debugging
