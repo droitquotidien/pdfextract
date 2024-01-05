@@ -22,7 +22,7 @@ def find_and_tag_exposelitige(txt):
         '<div class="Exposé du litige">\n<p>Faits et procédure</p>',
         txt,
     )
-    return re.sub(r"<p>Examen d(u|es) moyens?</p>", r"</div>\n<p>Examen \1</p>", txt)
+    return re.sub(r"(<p>Examen d(u|es) moyens?</p>)", r"</div>\n\1", txt)
 
 
 def find_and_tag_dispositif(txt):
@@ -36,7 +36,7 @@ def find_and_tag_dispositif(txt):
 
 def find_and_tag_moyensmotivation(txt, filename=""):
     """
-    C'est de très loin la partie difficile de ce TD. Sur les 5 exemples proposés, il semble n'y avoir aucun moyen de faire une règle générale simple....
+    C'est de très loin la partie difficile de ce TD. Sur les 6 exemples proposés, il semble n'y avoir aucun moyen de faire une règle générale simple....
     Le point le plus délicat étant de détecter la séparation "moyen"/"motivation".
 
     Pour éviter de passer trop de temps à devoir comprendre la structure des arrêts de la cour de cassation,
@@ -64,7 +64,7 @@ def find_and_tag_moyensmotivation(txt, filename=""):
                 C'est un peu compliqué à coder, mais:
                     - c'est simple à énoncer,
                     - ça semble généralisable,
-                    - ça permet d'expliquer la structure des 5 exemples donnés par courdecassation.fr
+                    - ça permet d'expliquer la structure des 6 exemples donnés par courdecassation.fr
 
         - Fin des blocs "motivations":
             Soit le début d'un bloc "moyen", soit le début du bloc "dispositif".
@@ -96,7 +96,7 @@ def find_and_tag_moyensmotivation(txt, filename=""):
 
     # grâce au re.search précédent
     assert len(all_moyens) > 0
-    # on conjecture l'assertion suivante sur les 5 exemples... toute la logique ci-dessous suppose implicitement cela
+    # on conjecture l'assertion suivante sur les 6 exemples... toute la logique ci-dessous suppose implicitement cela
     assert len(all_moyens) >= len(all_motivations)
 
     # Il faut baliser de div le texte entre begin_index et stop_index
