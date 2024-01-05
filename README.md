@@ -31,10 +31,14 @@ L'argument `-i` que l'on ajoute ici est pour indiquer que le conteneur doit êtr
 
 ## Extraire un fichier texte d'un fichier PDF
 
-Commande à lancer dans le répertoire racine du dépôt Git:
+Commande à lancer dans le répertoire racine du dépôt Git, j'utilise cette technique sur Windows, celle "en une ligne" ne marche pas chez moi :
 
 ```bash
-docker run -v ./exemples:/data -it pdftools /usr/bin/pdftotext -layout /data/pourvoi_n_21-24.923_30_11_2023.pdf
+docker run -v D:/Repos/pdfextract/exemples:/data -it pdftools bash
+```
+
+```bash
+../usr/bin/pdftotext -layout /data/pourvoi_n_21-24.923_30_11_2023.pdf
 ```
 
 Par défaut, le fichier texte sera généré avec le même nom et au même emplacement que le fichier PDF, avec l'extension `.txt`. Le fichier texte généré est en `utf-8`.
@@ -48,6 +52,7 @@ Commande à lancer dans le répertoire racine du dépôt Git:
 docker run -v ./exemples:/data -it pdftools /venvs/pdftools/bin/text2md /data/pourvoi_n_21-24.923_30_11_2023.txt /data/pourvoi_n_21-24.923_30_11_2023.md
 ```
 
+Je ne modifie pas le document ici mais j'utilise une méthode similaire à la précédente pour faire tourner les scripts.
 
 ## Transformer un fichier Markdown en fichier XML
 

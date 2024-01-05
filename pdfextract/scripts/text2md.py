@@ -18,8 +18,22 @@ def main():
     # see https://docs.python.org/fr/3/library/re.html
     mddata = textdata
 
+    date_pattern = re.compile(
+        r"\d{1,2}\s(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s\d{4}",
+        re.IGNORECASE
+        )
+    date = re.search(date_pattern, mddata).group()
+    pourvoi_pattern = re.compile(r"N°(\d+)-(\d+)\.(\d+)")
+    pourvoi = re.search(pourvoi_pattern, mddata).group()
+
+    headers_pattern = re.compile(r"\n(\s*)Page\s(\d+)\s\/\s(\d+)(\s*)(\n?).*\n")
+    mddata = re.sub(headers_pattern, r"", mddata)
+
+    multiple_lines_break_pattern = re.compile(r"\n(\n+)")
+    mddata = re.sub(multiple_lines_break_pattern, r"\n\n", mddata)
+
     md = list()
-    md.append("# Pourvoi NUM_POURVOI du DATE")
+    md.append(f"# Pourvoi {pourvoi} du {date}")
     md.append("")  # Ligne vide
     md.append(mddata)
 
