@@ -4,6 +4,10 @@ Transforme un document texte issu d'un PDF de la cours de cassation en Markdown.
 import argparse
 import re
 
+re_pourvoi = "Pourvoi N°([0-9]+)-([0-9]+).([0-9]+)-(.*) (.*)"
+re_date = "([0-9]{1,2}) (janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre) ([0-9]{4})"
+re_entete = re_pourvoi + " "+ re_date
+
 
 def main():
     parser = argparse.ArgumentParser("text2md")
@@ -18,11 +22,26 @@ def main():
     # see https://docs.python.org/fr/3/library/re.html
     mddata = textdata
 
+    # Get rid of the page beginning.
+    mddata = re.sub(re_entete,"",mddata)
+
+    # Get rid of the page number.
+    mddata = re.sub("Page ([0-9]+) / ([0-9]+)\n\x0c","",mddata)
+
+    mddata = re.sub(r"(\n*)(\s{10,})(\n)?",r"\1\3",mddata)
+
+    # Between two pages, there are at least 10 spaces, then we can get rid of them.
+    mddata = re.sub(r"(.)(\s{10,})(\n)?",r"\1 \3",mddata)
+
+    mddata = re.sub(r"([\w,])([\n])([\w])", r"\1 \3", mddata)
+    mddata = re.sub(r"([\n]){2,}", r"\n\n", mddata)
+    mddata = re.sub(r"([a-z]|[,])(\n*)([a-z])", r"\1\3", mddata)
+
     md = list()
     md.append("# Pourvoi NUM_POURVOI du DATE")
     md.append("")  # Ligne vide
     md.append(mddata)
-
+    
     outdata = '\n'.join(md) 
     with open(args.out_file, "w", encoding="utf-8") as f:
         f.write(outdata)
