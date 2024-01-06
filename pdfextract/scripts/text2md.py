@@ -16,8 +16,8 @@ def main():
 
 # Add title to the Markdown document
     # Define the regular expression pattern
-    pourvoi_pattern = re.compile(r'Pourvoi\s+n°\s+\w+\s*(\d+-\d+\.\d+)')
-    date_pattern = re.compile(r'Audience\s+publique\s+du\s+(\d+\s*\w*\s*(\d+\s*\w*\s*\d+))')
+    pourvoi_pattern = re.compile(r'°\s+\w+\s*(\d+-\d+\.\d+)')
+    date_pattern = re.compile(r'(\d{1,2}\s\w+\s\d{1,4})')
 
     # Search for the pattern in the text
     match_num = pourvoi_pattern.search(textdata)
