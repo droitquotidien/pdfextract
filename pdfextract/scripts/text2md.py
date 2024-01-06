@@ -17,7 +17,7 @@ def main():
     header = r'Pourvoi N°(\d{2}-\d{2,3}\.\d{3})-\D+(\d{1,2}\D+\d{4})\n'
 
     text_without_headers = re.sub(header, ' ', textdata)
-    text_without_footers = re.sub(r'\s*Page \d+ / \d+\s*', '', text_without_headers)
+    text_without_footers = re.sub(r'\s*Page \d+ / \d+\s*', r'\n\n', text_without_headers)
     text_without_page_breaks = re.sub('\f', '', text_without_footers)
     text_reassembled = re.sub(', \n\n', ', ', text_without_page_breaks) # Reassemble the paragraphs
     text_without_underscores = re.sub(r'_{2,}', '', text_reassembled)
