@@ -82,7 +82,7 @@ Les zones sont notamment:
 - Moyens
 - Dispositif
 
-Le XML généré doit transformer chaque paragraphe markdown en éléments `<p>``.
+Le XML généré doit transformer chaque paragraphe markdown en éléments `<p>`.
 Chaque zone doit être de la forme `<div class="NOM-ZONE">...</div>`.
 L'élément racine sera appelé `<decision>`.
 
