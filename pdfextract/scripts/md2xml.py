@@ -10,7 +10,7 @@ paragrapheExposeLitige = r"Faits et procédure(s)?"
 paragrapheMoyens = r"(examen|(e|é)noncé) d(u|es) moyen(s)?"
 paragrapheMotivation = r"réponse de la cour"
 paragrapheDispositif = r"par ce(s)? motif(s)?"
-paragrapheDispositif2 = r"en conséquence"
+paragrapheDispositif2 = r"(^[0-9.]+)En conséquence"
 
 def main():
     parser = argparse.ArgumentParser("Markdown to XML")
@@ -72,7 +72,7 @@ def main():
             xml.append("<p> " + line + "</p>")
             currentClass = "Motivation"
         
-        elif re.search(paragrapheDispositif,line,re.IGNORECASE) or re.search(paragrapheDispositif2,line,re.IGNORECASE):
+        elif re.search(paragrapheDispositif,line,re.IGNORECASE) or re.search(paragrapheDispositif2,line):
             if currentClass == "Dispositif":
                 xml.append("<p> " + line + " </p>")
                 continue
@@ -91,4 +91,3 @@ def main():
 
     with open(args.out_file, "w", encoding="utf-8") as f:
         f.write(outdata) 
-
