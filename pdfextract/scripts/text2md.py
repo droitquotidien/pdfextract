@@ -32,6 +32,13 @@ def main():
     multiple_lines_break_pattern = re.compile(r"\n(\n+)")
     mddata = re.sub(multiple_lines_break_pattern, r"\n\n", mddata)
 
+    carriage_return_pattern = re.compile(r"(.)\n(.[^_])")
+
+    def fix_carriage_return(object: re.Match[str]) -> str:
+        return f"{object.group(1)} {object.group(2)}"
+    
+    mddata = re.sub(carriage_return_pattern, fix_carriage_return, mddata)
+
     md = list()
     md.append(f"# Pourvoi {pourvoi} du {date}")
     md.append("")  # Ligne vide
