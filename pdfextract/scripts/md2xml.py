@@ -22,6 +22,32 @@ def main():
     xml = list()
     xml.append('<?xml version="1.0" encoding="utf-8"?>')
     xml.append('<decision>')
+    
+    # zone ENTETE
+    stop_string = '\nFaits et procédure'
+    xmldata = re.sub(rf'(.+){stop_string}', rf'<div class="ENTETE">\n\1\n</div>{stop_string}', xmldata, flags=re.DOTALL)
+
+    # zone EXPOSE-DU-LITIGE
+    start_string = 'Faits et procédure'
+    stop_string = '\nExamen des moyens'
+    xmldata = re.sub(rf'({start_string}.+){stop_string}', rf'<div class="EXPOSE-DU-LITIGE">\n\1\n</div>{stop_string}', xmldata, flags=re.DOTALL)
+
+    # zone MOTIVATION
+    xmldata = re.sub(r'(Réponse de la Cour)', r'</div>\n\1', xmldata, flags=re.DOTALL)
+    xmldata = re.sub(r'(Réponse de la Cour)', r'<div class="MOTIVATION">\n\1', xmldata, flags=re.DOTALL)
+    xmldata = re.sub(r'(Enoncé du moyen)', r'</div>\n\1', xmldata, flags=re.DOTALL)
+    xmldata = re.sub(r'(\nPAR CES MOTIFS,)', r'</div>\n\1', xmldata, flags=re.DOTALL)
+
+    # zone MOYENS
+    xmldata = re.sub(r'(Examen des moyens)', r'<div class="MOYENS">\n\1', xmldata, flags=re.DOTALL)
+    xmldata = re.sub(r'(Enoncé du moyen)', r'<div class="MOYENS">\n\1', xmldata, flags=re.DOTALL)
+
+    # zone DISPOSITIF
+    xmldata = re.sub(r'\n(PAR CES MOTIFS,.+)', r'<div class="DISPOSITIF">\n\1\n</div>', xmldata, flags=re.DOTALL)
+
+    # ajouter les balises <p></p>
+    xmldata = re.sub(r'\n([^<].+?[^>])\n', r'\n<p>\1</p>\n', xmldata)
+
     xml.append(xmldata)
     xml.append('</decision>')
 
