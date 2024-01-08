@@ -14,9 +14,15 @@ def main():
     with open(args.in_file, "r", encoding="utf-8") as f:
         mddata = f.read()
 
-    # Transform mddata with re here
-    # see https://docs.python.org/fr/3/library/re.html
-    # document must be a valid XML file
+    mddata='<introduction>\n' + mddata + r'</reponse>'
+    mddata=re.sub('Faits et procédure',r'</introduction>\n<faits>',mddata)
+    mddata=re.sub('Examen (.)+ moyen(s)?','</faits>',mddata)
+    mddata=re.sub('Enoncé (.)+ moyen(s)?','</reponse>\n<moyen>',mddata)
+    mddata=re.sub('Réponse de la Cour','</moyen>\n<reponse>',mddata)
+    mddata=re.sub(r'((.)+)?(S|s)ur(.)+moyen((.)+)?\n','',mddata)
+    mddata=re.sub(r'</reponse>\n<moyen>','<moyen>',mddata, count=1)
+
+
     xmldata = mddata
 
     xml = list()
@@ -28,4 +34,4 @@ def main():
     outdata = '\n'.join(xml)
 
     with open(args.out_file, "w", encoding="utf-8") as f:
-        f.write(outdata) 
+        f.write(outdata)
