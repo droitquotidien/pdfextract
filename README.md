@@ -34,7 +34,7 @@ L'argument `-i` que l'on ajoute ici est pour indiquer que le conteneur doit êtr
 Commande à lancer dans le répertoire racine du dépôt Git:
 
 ```bash
-docker run -v ./exemples:/data -it pdftools /usr/bin/pdftotext -layout /data/pourvoi_n_21-24.923_30_11_2023.pdf
+docker run -v .\exemples:/data -it pdftools /usr/bin/pdftotext -layout /data/pourvoi_n_21-24.923_30_11_2023.pdf
 ```
 
 Par défaut, le fichier texte sera généré avec le même nom et au même emplacement que le fichier PDF, avec l'extension `.txt`. Le fichier texte généré est en `utf-8`.
@@ -45,7 +45,7 @@ Par défaut, le fichier texte sera généré avec le même nom et au même empla
 Commande à lancer dans le répertoire racine du dépôt Git:
 
 ```bash
-docker run -v ./exemples:/data -it pdftools /venvs/pdftools/bin/text2md /data/pourvoi_n_21-24.923_30_11_2023.txt /data/pourvoi_n_21-24.923_30_11_2023.md
+docker run -v .\exemples:/data -it pdftools /venvs/pdftools/bin/text2md /data/pourvoi_n_21-24.923_30_11_2023.txt /data/pourvoi_n_21-24.923_30_11_2023.md
 ```
 
 
@@ -54,7 +54,7 @@ docker run -v ./exemples:/data -it pdftools /venvs/pdftools/bin/text2md /data/po
 Commande à lancer dans le répertoire racine du dépôt Git:
 
 ```bash
-docker run -v ./exemples:/data -it pdftools /venvs/pdftools/bin/md2xml /data/pourvoi_n_21-24.923_30_11_2023.md /data/pourvoi_n_21-24.923_30_11_2023.xml
+docker run -v .\exemples:/data -it pdftools /venvs/pdftools/bin/md2xml /data/pourvoi_n_21-24.923_30_11_2023.md /data/pourvoi_n_21-24.923_30_11_2023.xml
 ```
 
 
